@@ -90,10 +90,7 @@ make_correlation_table = (elements, correlation) ->
             _add_cell_info(x, y, correlation[y][x])
 
 
-$(document).ready ->
-    [elements, correlation] = load_local()
-    make_correlation_table(elements, correlation)
-
+attach_table_listener = (elements, correlation) ->
     $('.cell').click ->
         cell = $(this)
         x = cell.data('x')
@@ -101,3 +98,34 @@ $(document).ready ->
         mark = explore(x, y, correlation)
         make_cell_color(x, y, mark)
         save_local(elements, correlation)
+
+
+draw = (elements, correlation) ->
+    $('#main').html('')
+    make_correlation_table(elements, correlation)
+    attach_table_listener(elements, correlation)
+
+
+expand_element = (name, elements, correlation) ->
+    elements.push(name)
+    for line in correlation
+        line.push(false)
+    correlation.push(false for _ in elements)
+    save_local(elements, correlation)
+
+
+$(document).ready ->
+    [elements, correlation] = load_local()
+    draw(elements, correlation)
+
+    $('#add-element').click ->
+        name = prompt('Input name of the new element:')
+        expand_element(name, elements, correlation)
+        draw(elements, correlation)
+
+    $('#reset').click ->
+        ok = confirm('Are you really want to reset the progree?')
+        if ok
+            reset_local()
+            [elements, correlation] = load_local()
+            draw(elements, correlation)
