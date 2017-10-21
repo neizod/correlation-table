@@ -1,0 +1,23 @@
+---
+---
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.vtext, .htext {
+    margin: 0;
+    padding: 0.5em;
+}
+
+.vtext {
+    writing-mode: vertical-lr;
+}
+
+.htext {
+    writing-mode: horizontal-tb;
+}
