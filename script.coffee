@@ -14,7 +14,7 @@ _add_row = () ->
 _add_cell = (content='') ->
     cell = $('<td>')
     cell.html(content)
-    row = $('#main table:last-child')
+    row = $('#main table tr:last-child')
     row.append(cell)
     cell
 
