@@ -2,6 +2,7 @@
 ---
 
 elements = ['earth', 'wind', 'fire', 'water']
+correlation = ((false for _ in elements) for _ in elements)
 
 
 _add_table = () ->
@@ -34,9 +35,29 @@ _add_cell_label = (value='', vtext=false) ->
 
 _add_cell_info = (x, y) ->
     cell = _add_cell()
-    cell.data('x', x)
-    cell.data('y', y)
+    cell.attr('data-x', x)
+    cell.attr('data-y', y)
     cell.attr('class', 'cell')
+
+
+explore = (x, y, correlation) ->
+    if x != y
+        correlation[y][x] = not correlation[y][x]
+    correlation[x][y] = not correlation[x][y]
+
+
+_add_explored = (x, y, mark) ->
+    cell = $("td.cell[data-x='#{x}'][data-y='#{y}']")
+    if mark
+        cell.addClass('explored')
+    else
+        cell.removeClass('explored')
+
+
+make_cell_color = (x, y, mark) ->
+    if x != y
+        _add_explored(y, x, mark)
+    _add_explored(x, y, mark)
 
 
 make_correlation_table = (elements) ->
@@ -57,7 +78,7 @@ $(document).ready ->
 
     $('.cell').click ->
         cell = $(this)
-        if cell.hasClass('explored')
-            cell.removeClass('explored')
-        else
-            cell.addClass('explored')
+        x = cell.data('x')
+        y = cell.data('y')
+        mark = explore(x, y, correlation)
+        make_cell_color(x, y, mark)
